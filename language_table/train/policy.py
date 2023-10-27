@@ -71,7 +71,7 @@ class BCJaxPyPolicy(py_policy.PyPolicy):
     
     # Add a batch dim.
     observation = jax.tree_map(lambda x: jnp.expand_dims(x, 0), observation)
-    print(observation)
+    # print(observation)
     # 构造模型所需的输入
     # print(observation["rgb"].shape)
     # exit()
@@ -82,12 +82,15 @@ class BCJaxPyPolicy(py_policy.PyPolicy):
     observation_input['natural_language_embedding'] = tf.squeeze(observation_input['natural_language_embedding'], axis=2)
 
     output,_ = self.model(observation_input,step_type=None, network_state=self.network_state, training=False)
+    # print(f"output:{output}")
     # print(output['effector_target_translation'].numpy()[0])
     # print(observation['effector_translation'][:,:,:])
-    action = output['effector_target_translation'].numpy()[0] - observation['effector_translation'][0,5,:]
-    action = action * 0.1
-    action = np.clip(action,self.action_spec.minimum,self.action_spec.maximum)  #zy
-    return action
+    action = output['action']
+    # action = action * 0.1
+    # action = np.clip(action,self.action_spec.minimum,self.action_spec.maximum)  #zy
+    # print(f"action:{action.shape}")
+  
+    return action[0]
 
   def _action(self, time_step, policy_state=(), seed=0):
     observation = time_step.observation
