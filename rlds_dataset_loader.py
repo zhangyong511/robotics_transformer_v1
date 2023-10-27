@@ -193,7 +193,7 @@ class TransformDict(preprocess_spec.RandomMapTransform):
         """Applies all distortions."""
         action_lable = {
             "terminate_episode": tf.one_hot(tf.cast(features["is_terminal"], dtype=tf.int32), depth=2, dtype=tf.int32),
-            "effector_target_translation": features["observation"]["effector_target_translation"]}
+            "action": features["action"]}
         train_observation = {"image": features["observation"]["rgb"],
                              "natural_language_embedding": tf.cast(features['observation']['instruction'],dtype=tf.float32)}
         features = {"action_lable": action_lable, "train_observation": train_observation}
